@@ -1,0 +1,19 @@
+{
+  "name": "dream-map-tools",
+  "private": true,
+  "type": "module",
+  "description": "Генератор географічних даних для сайту Dream Map (запускається один раз, на сайті не потрібен)",
+  "scripts": {
+    "build": "node build-world-data.mjs"
+  },
+  "devDependencies": {
+    "d3-geo": "^3.1.1",
+    "i18n-iso-countries": "^7.13.0",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2",
+    "world-countries": "^5.0.0"
+  },
+  "dependencies": {
+    "topojson-simplify": "^3.0.3"
+  }
+}

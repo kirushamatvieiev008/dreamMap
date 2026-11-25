@@ -1,0 +1,579 @@
+/* ==========================================================================
+   components.css — картки місць, діалог із формою, сповіщення, ефекти
+   ========================================================================== */
+
+/* ---------- Прапорці ---------- */
+.flag {
+  display: inline-block;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--panel-raised);
+}
+
+.flag-emoji {
+  display: inline-grid;
+  place-items: center;
+  line-height: 1;
+}
+
+/* ---------- Картка місця ---------- */
+.place {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  background: var(--panel);
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.place:hover,
+.place.is-linked {
+  border-color: var(--line-strong);
+}
+
+.place[data-status="visited"].is-linked,
+.place[data-status="visited"]:hover {
+  border-color: color-mix(in oklab, var(--visited) 55%, var(--line-strong));
+}
+
+.place[data-status="planned"].is-linked,
+.place[data-status="planned"]:hover {
+  border-color: color-mix(in oklab, var(--dream) 55%, var(--line-strong));
+}
+
+.place-media {
+  position: relative;
+  aspect-ratio: 4 / 3.3;
+  overflow: hidden;
+  background: var(--panel-raised);
+}
+
+.place-media > img.place-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease), filter 0.4s;
+}
+
+.place[data-status="planned"] .place-photo {
+  filter: saturate(0.82);
+}
+
+.place:hover .place-photo {
+  transform: scale(1.04);
+}
+
+/* Згенерована обкладинка, якщо фото немає */
+.place-art {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(120% 90% at 85% 10%, hsl(var(--h2) 85% 62% / 0.55), transparent 60%),
+    linear-gradient(140deg, hsl(var(--h1) 62% 42%), hsl(var(--h2) 70% 22%));
+}
+
+.place-art-letter {
+  position: absolute;
+  right: -4%;
+  bottom: -24%;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(9rem, 14vw, 13rem);
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.14);
+  user-select: none;
+}
+
+.place-art .flag {
+  width: 76px;
+  height: 76px;
+  font-size: 2.6rem;
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 14px 34px -8px rgba(0, 0, 0, 0.55);
+}
+
+.place-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(4, 8, 28, 0.86) 4%, rgba(4, 8, 28, 0.18) 48%, transparent 70%);
+  pointer-events: none;
+}
+
+.place-title {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 16px;
+  z-index: 1;
+  color: #fff;
+}
+
+.place-title h3 {
+  overflow-wrap: anywhere;
+  font-size: clamp(1.3rem, 1.1rem + 0.5vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.place-country {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.place-country .flag {
+  width: 18px;
+  height: 18px;
+  font-size: 0.8rem;
+}
+
+.chip {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px 6px 10px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.chip .icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 3;
+}
+
+.chip--dream {
+  background: var(--dream);
+  color: var(--dream-ink);
+}
+
+.chip--visited {
+  background: var(--visited);
+  color: var(--visited-ink);
+}
+
+.place-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px 6px;
+}
+
+.place-note {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.place-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  color: var(--text-faint);
+  font-size: 0.85rem;
+}
+
+.place-meta .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.place-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px 16px 18px;
+}
+
+.toggle-visited {
+  flex: 1;
+  justify-content: flex-start;
+  gap: 10px;
+  min-width: 0;
+  padding-left: 8px;
+  border-color: var(--line-strong);
+  background: transparent;
+  color: var(--text);
+}
+
+.toggle-visited:hover {
+  border-color: var(--visited);
+}
+
+.toggle-box {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border: 2px solid var(--line-strong);
+  border-radius: 50%;
+  color: transparent;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.toggle-box .icon {
+  width: 14px;
+  height: 14px;
+  stroke-width: 3.2;
+}
+
+.toggle-visited[aria-pressed="true"] {
+  border-color: color-mix(in oklab, var(--visited) 65%, transparent);
+  background: color-mix(in oklab, var(--visited) 14%, transparent);
+}
+
+.toggle-visited[aria-pressed="true"] .toggle-box {
+  border-color: var(--visited);
+  background: var(--visited);
+  color: var(--visited-ink);
+}
+
+/* ---------- Діалог із формою ---------- */
+.dialog {
+  width: min(94vw, 780px);
+  max-height: min(92dvh, 760px);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: 28px;
+  background: var(--panel-solid);
+  color: var(--text);
+  box-shadow: var(--shadow-float);
+
+  opacity: 0;
+  transform: translateY(14px) scale(0.98);
+  transition: opacity 0.25s var(--ease), transform 0.3s var(--ease), overlay 0.25s allow-discrete,
+    display 0.25s allow-discrete;
+}
+
+.dialog[open] {
+  opacity: 1;
+  transform: none;
+}
+
+@starting-style {
+  .dialog[open] {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}
+
+.dialog::backdrop {
+  background: rgba(3, 6, 22, 0.62);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 0.25s, overlay 0.25s allow-discrete, display 0.25s allow-discrete;
+}
+
+.dialog[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  .dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+.place-form {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+}
+
+.dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px 8px 28px;
+}
+
+.dialog-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+}
+
+.dialog-body {
+  display: grid;
+  grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
+  gap: 28px;
+  padding: 16px 28px 24px;
+  overflow-y: auto;
+}
+
+.dialog-fields {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.dialog-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 28px 24px;
+  border-top: 1px solid var(--line);
+}
+
+/* Фото */
+.photo-field {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.dropzone {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1.5px dashed var(--line-strong);
+  border-radius: 20px;
+  background: color-mix(in oklab, var(--text) 4%, transparent);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.dropzone:hover,
+.dropzone.is-over {
+  border-color: var(--dream);
+  background: color-mix(in oklab, var(--dream) 9%, transparent);
+}
+
+.dropzone-empty {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 18px;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.dropzone-empty .icon {
+  width: 34px;
+  height: 34px;
+  color: var(--dream);
+}
+
+.dropzone-empty strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.dropzone-preview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-remove {
+  justify-self: start;
+}
+
+/* Перемикач статусу */
+.segmented {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+}
+
+.segmented input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.segmented label::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--dot);
+}
+
+.segmented label[for="statusPlanned"] { --dot: var(--dream); }
+.segmented label[for="statusVisited"] { --dot: var(--visited); }
+
+.segmented input:checked + label {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.segmented input:focus-visible + label {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.country-input {
+  position: relative;
+}
+
+.country-input .input {
+  padding-left: 52px;
+}
+
+.country-input-flag {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--text) 10%, transparent);
+  color: var(--text-faint);
+  pointer-events: none;
+}
+
+.country-input-flag img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.country-input-flag .icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- Сповіщення ---------- */
+.toasts {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  z-index: 120;
+  display: grid;
+  gap: 10px;
+  width: min(92vw, 440px);
+  translate: -50% 0;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 12px 12px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 18px;
+  background: var(--panel-solid);
+  box-shadow: var(--shadow-float);
+  font-size: 0.95rem;
+  pointer-events: auto;
+  animation: toast-in 0.35s var(--ease);
+}
+
+.toast.is-leaving {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s;
+}
+
+.toast-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast--error {
+  border-color: color-mix(in oklab, var(--danger) 60%, transparent);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+}
+
+/* ---------- Конфеті ---------- */
+.fx-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+
+/* ---------- Адаптивність ---------- */
+@media (max-width: 640px) {
+  .dialog {
+    width: 100vw;
+    max-width: 100vw;
+    max-height: 94dvh;
+    margin-bottom: 0;
+    border-radius: 28px 28px 0 0;
+  }
+
+  .dialog-body {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding-inline: 20px;
+  }
+
+  .dropzone {
+    aspect-ratio: 16 / 9;
+  }
+
+  .dialog-head {
+    padding-inline: 20px 16px;
+  }
+
+  .dialog-foot {
+    padding-inline: 20px;
+  }
+}
